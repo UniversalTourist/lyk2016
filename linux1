@@ -1,0 +1,992 @@
+The MIT License (MIT)
+Copyright (c) 2016 Hazel Kavılı (@ZofiaTheWitch)
+
+Friday 5 August 2016
+Linux Yaz Kampı
+Eğitmen: Güray YILDIRIM (İTÜ Elektronik Haberleşme)
+Notlar: Hazel KAVILI (İTÜ Yer Sistem Bilimleri)
+Virtual Box & Centos Nedir? Kurulumu Nasıl Yapılır?
+BIOS: basic input output system
+Boot loader: ön yükleyici. BIOS bunu çağırıyor. Bunu nereye kurayım diyor. Kurulum aşamasındaki “installation destination” chapterında önemli. Hangi işletim sistemi başlasın gibi sorular soruyor.
+Manual Partitioning: swap dosya sistemi değişmesin, / (slash) dizini standart partitioning
+LVM  (Logical Volume Manager) mi yoksa standart partitioning mi kullanacağız? LVM daha kolay “resize” etmeye yardımcı.
+SSD varsa swap tavsiye edilmiyor.
+En yetkili kullanıcı “root”. Sağlam parola önemli.
+Create user: yöneticinin bir kullanıcıya yetki verir, kendimiz kullanıcı adı yapalım
+Çift tıkla-clone ile diskimize klonlama yapabiliriz.
+Asıl makine ne kadarsa o kadar çoğaltıyor. “Reinitialize the MAC adress off all network calls” ve  “Linked clone” seçiyoruz.
+Clone üzerinde işlem yapıyoruz. Esas makineye dokunmuyoruz çalışırken.
+
+
+
+
+
+
+
+
+
+
+Saturday 6 August 2016
+Centos Temel Komutlar 
+- Makineyi File —> Export Appliance diyip çıkartıp başkasıyla paylaşabiliriz, oluşturabiliriz aynısından. Sonra paylaşabiliriz.
+[root@localhost ~]#  ————-> root burada kullanıcı adı ve # bize root olduğunu belirtiyor. 
+localhost ———> bilgisayarın adı, değiştirilebilir.
+~ ——>  home klasöründeyiz onu gösteriyor.
+cntrl + D çıkıyoruz
+echo hazel ——> Ekrana hazel yazıyor
+echo $SHELL ——> Hangi terminali (shell’i) kullanıyoruz. Çıktısı /bin/bash
+bash: bourne again shell
+touch dosya1 ——> Dosya oluşturuyoruz.
+touch .hazel ——> Gizli dosya
+ls ——> Listeliyor.
+ls -l ——> gelen detaylı ekran. kaç kb, ne zaman oluşturulmuş, izinler vs.
+ls / ——>  Bir sürü dosya geliyor.
+echo hazel\ lyk ——> isimleri boşluklu yazıyor
+ls /root
+ls -la ——> Gizli olan da görünüyor.
+ls - -help | less ——> kısaca komutu anlatıyor.
+/all ——> help dökümanındaki “all”ları buluyor.( /‘dan sonra yazacağımız şeyi)
+ls -la | less ——> -la yapınca gelen listede aşağı yukarı ilerliyoruz.
+pwd ——> print working directory 
+uptime
+date
+cd ——> change directory
+cd /home
+bulunduğum yerdeki klasöre gideceksem / yapmama gerek yok
+rm ——> remove
+rm dosya1
+-f ——> force
+rm -r dizin2 —> recursively, yani tek tek aşağıdan yukarıya siliyor ve her defasında soruyor.
+rm -rf dizin2 ——> direkt sormadan siliyor.
+rm -rf —no-preserve-root ——> Geri dönüşü olmadan siliyor.
+rmdir ——> içi boş bir dizini siliyor. içi dolu olanı rmdir ile silemeyiz.
+
+mkdir dizin ——> klasör oluşturuyor (directory)
+man pwd ——> pwd ne işe yarıyor diye Manuel’a bakıyoruz.
+alt + fn+f2, alt +fn+f3 farklı terminalleri açar. 
+(tty1, tty2) terminal adları ve kntrl+D ile çıkış yapabiliriz terminallerden. Farklı kullanıcılar farklı terminaller için.
+screen komutu ile 6’dan fazla terminal açabilmek için.
+ROOT’tayken
+du -sh /boot: bilgisayarımın çekirdeği boot’taydı. Gelen sayı kullanılan “disk usage”. Megabyte
+du -s /boot: h’yi çıkarınca sayı büyüyor ama h yazmak önemli “human readable” Byte
+cat dosya1 ——>  dosyanın içinde ne var ona bakıyor. (dizine değil)
+whoami ——> neredeyim, hangi kullanıcıyım onu söylüyor.
+whatis ls —> komutun sadece adını veriyor.
+
+
+
+
+KATMANLAR
+Hardware (en alt. Donanım) 
+KERNEL (kernel space) : linux çekirdeği. Donanımla yazılımı bağlıyor.
+Shell/Commandline Interface (kullanıcılar çalışıyor)
+Window System: Ekrana görüntü vermeye yarıyor
+Window Manager (user space)
+Desktop Environment (KDE, XFCE, GNOME…): çeşitli başlat menüsü vs. masaüstüne sahip
+
+Linux dağıtımları: Centos, Ubuntu… Kernel üzerinde değiştirebilirim.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sunday 7 August 2016
+Centos Temel Komutlar 
+cd /etc yazdım. sonra /bin/ls -la | less
+logout ve kntrl + D ile kullanıcıdan çıkıyoruz.
+touch deyip bir dosya oluşturdum diyelim, daha sonra aynı isime touch dersem onu silmiyor ve son değişiklik tarihi değişiyor. Var olan dosyanın içini değiştirmiyor.
+ROOT dizininde çalışıyoruz:
+Full Path ve Relative Path
+mkdir dokumanlar, cd dokumanlar
+pwd bize Full Path’i veriyor.
+cd . ——>  aynı yerdeyiz
+Root’tayken cd ./dokumanlar dediğimde dokumanlara geçiyorum.
+[root@localhost ~]#  ——> buradaki ~ işareti ev dizinini belirtiyor. Root’unki /root
+lykhazel kullanıcısı ile gelince ——> ev dizini /home oluyor. /home/lykhazel
+cd ~ ——> /home/lykhazel
+“cd -“ yapınca “bir önceki dizine” geçiyor.
+cp sayfa1 sayfa1_1 ——> sayfa1’i sayfa1_1 olarak kopyaladım.
+cp -R dok1 dok3 ——> klasörü kopyalamak için -R kullanacağız. Recursively. dok1’i dok3 olarak kopyaladık.
+kopyaladığımız dosya mı dizin mi nasıl anlayacağız?
+file dok1 uzantıya bakmadan ne dosyası olduğunu söyler
+ls -la dediğimizde ekranın en solundaki harfler
+ls dediğimizde gelen renkler
+cd ~ ——> root’un home’una geliyorum. (/root)
+mv dok1/sayfa1 dok2/sayfa1.1 ——> ilk dok kısmındaki dosyayı al dok2’de sayfa 1.1 olarak taşı. Burada mv ile hem adını değiştirebiliyoruz hem de taşıyabiliyoruz. home’a dönüş yaptığımızda çalışıyor.
+Kaynağı yazarken başa / yazarsam kök dizinin içinde arar. ama /root/dok yazarsam orayı arar.
+echo naber > deneme ——> deneme dosyasına naber yazdı
+cat deneme ile içine baktık.
+echo hazel > deneme dediğimde *******>**** işareti koyduğum için ilk yazdığımız naber gidiyor.  eğer ***** >>**** kullanırsam altına yazar.
+cat >> deneme dediğimde aşağıya istediklerimi yazmama izin veriyor. kntr + D ile “end of file” demiş oluyoruz ve çıkıyoruz.
+cat >> roman << HZL ——> içine HZL yazdığımda bitiyor/çıkıyor. HZL yerine herhangi bir şey yazabilirim.
+ls + kntrC ——> ls komutunu iptal et alt satıra geç.
+mkdir -p kefir/kebap ——> kefir’i oluştur sonra kebap’ı oluştur. p burada parent. bunlar dizin. iç içe dizin oluşturuyorum.
+mkdir -p kefir/kebap{a,b,c,d,e} ——> kebap, kebapa, kebapb… kebape oluşturdu.
+mkdir kefir/kebap{1..100}
+mkdir kefir/kebap{1..100}/{ayran} ——> içlerine {ayran} oluşturdu.
+* yaparak o karakter ile başlayanları getirebiliriz.
+dd if=/dev/random count=1 bs=10
+dd if=/dev/random of=/dev/sda count=1 bs=512
+random yerine zero yazsak da uçuracak.
+/ if=/dev/zero of=kefir count=10 bs=1M ——> içi 0’larla dolu 10 tane veri alıp her biri 1MB
+random ile zero doldurmak arasında da fark var. aynı karakterle doldurma daha hızlı gibi.
+gzip kefir ——> sıkıştırma işlemi yapıyor
+/bin/ls -lah ile baktık boyutları iyi okumak için -lah
+gzip kefir ——> sıkıştır
+gzip -d kefir.gz ——> aç
+gunzip kefir.gz ——> aç
+cc sıkıştırma yapmayıp dosyaları ard arda ekliyor, zip sıkıştırıyor.
+shm (shared memory) RAM’den yiyor, hard diskimize yazmıyoruz. Buradan dosya silersek RAM’den silmiş oluruz. RAM’imiz dolarsa shm’den işlem yapar.
+shm’de dd if=/dev/random of=/dev/sda count=10 bs=1M yapıyorum örnek olarak. Hızı 1.4 GB/s çıkıyor.
+aynısını /boot’un içinde yapınca 721 MB/s ve eğer SSD yoksa daha bile yavaş olur.
+countları arttırınca deneme yapabiliriz.
+
+———————————————————————
+bin: (binary) çalıştırılabilir olan dosyalar (Derlenmiş) Yeşil renkliler.
+boot: içinde Kernel’in kendisi var.
+dev: (device) takılan cihazların yerini kolayca bulalım diye. C character cihaz örneğin klavye, B Block cihaz genellikle dönen şeyler CD (flasdiskler de dönen cihaz muamelesi görüyor)
+Bilgisayarın harddiski linux’ta sda (sata disk) sonradan eklenenler sdb sdc. sda1, sda2 disk içindeki bölümler
+shm’ye bir şeyler yazmak çok hızlı. RAM’i iyi yönetir. RAM dolarsa swap alanına geçiyor.
+random: istediğim kadar random sayı
+zero: her şeyi sıfır yapıyor
+null: ne gönderirsek yok ediyor
+rtc: real time clock
+etc: edit to configure/ ayar dosyaları. passwd ve shadow en çok kullandığımız oldu. bunları cat /etc/passwd ile gördük.
+lib: kütüphaneler. SO (static objective) uzantılı.
+lost + found: ext4 dosya sisteminin özelliği. Örneğin elektrik kesildi ve bazı dosyalar açıktı. Dosyalar var ama nerede olduğu bilinmiyor. İhityaç olabilir diye içinde saklıyor.(root’un altında)
+/home’un altında da var. Diske özel olduğu için. Bazen /home’da olmayabilir. Örneğin diski bölmemiş ya da /home’un dosya sistemi ext4 olmayabilir. 
+media ve mnt: CD ya da flashdisk takınca burada görebiliyoruz
+opt (optional):İnternetten indirdiklerimi buraya koyabiliriz.
+proc ve sys: Diskimizin üzerinde değil. Ama içleri dolu. Aslında yok bunlar ama ls -la ya da cat dediğimizde oluşuyor. dma proc’un altında. direct memory access. cpuinfo.
+run: .apid dosyaları oluşuyor. o an çalışan dosyaların ID’leri.
+sys: çeşitli sistem ayarları. Burada çekirdekle konuşuyoruz. Çalışan sistem üzerinde değişiklik yapıyoruz. Proc bize bilgi veriyor, sys ile biz sisteme bilgi veriyoruz. etc kalıcı ayarlar, sys geçici
+sbin: yetkili kullanıcının bin’i. bu dosyaların sahibi root, ya da yönetici olmamız gerekiyor.
+tmp (temporary)
+var (variable): örneğin yazıcıya gönderdiğimiz çıktılar. Loglar.
+usr: unix system resources
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Monday 8 August 2016
+Centos Temel Komutlar 
+ls a* ——> a ile başlayanları sırala (* = wildcard)
+mkdir -p {a,b,c}/{x,y,z}/{1,2,3,4,5}/lyk.txt ——> iç içe  çeşitli dizinler
+dhclient diyip internete bağladık. bağlantıyı kesmek için “kill 9534” (sayı farklılaşır)
+yum install nano
+nano dosyaadı
+history’ye girip komutları gördük ve upuzun komut gördük. kntr + r dersek komutları tamamlayan bir satır görüyoruz. örneğin ilk harfi yazdıktan sonra kntr + r ile tekrar inceleyebiliriz.
+!56 dediğimizde history’deki 56.komutu çalıştırıyor.
+More ve Less
+less /etc/passwd
+more /etc/passwd
+script komutu terminale yazdığımız her şeye kaydetmeye yarıyor !!!! 
+script kayitlar_8agu örneğini başlattım.
+exit diyip çıkıyorum.
+more kayitlar_8agu ya da cat kayitlar_8agu içini görüntülüyoruz.
+script dosyasında çalışırken clear yaptığımızda ekranı temizleyeyim derken loglar gidebilir.
+
+ls >> dosyalistesi ——> ls’in çıktısını dosyalistesine kaydediyor.
+ls > null ——> çıktıyı yutuyor.
+Kullanıcı Ekleme
+useradd cansu ——> kullanıcı ekliyorum. parolayı belirlemedik.
+kullanıcı hakkında bilgiler: passwd, shadow, group
+passwd cansu kavili ——> cansu kullanıcısının şifresi kavili olsun
+useradd ya da adduser kullanmadan kullanıcı eklemeye çalışacağız:
+
+nano’da sinif_listesi oluşturduk:
+head -n 3 sinif_listesi
+tail -n 3 sinif_listesi
+head -n 5 sinif_listesi | tail -n 2
+head -n 5 sinif_listesi | tail -n 2 | tail -n 1 > sansli
+cat -n sinif_listesi ——> içindekileri numaralandırıyor
+cat sinif_listesi | wc ——> satır, kelime, harf
+wc -l, wc -w, wc -c
+echo -n güray | wc ****wordcount neden 6 çıktı*****
+unicode UTF -8 
+echo -n güray | wc -m ——> wc -m karakter sayısını veriyor, byte sayısını değil. Bu yüzden 5 sayısını alabiliyoruz.
+head -n -5 sinif_listesi | tail -n +6  (ilk 5 satır hariç ve son 5 satır hariç)
+
+ÖNEMLİ
+ls /ddtt ——> böyle bir dizin yok mesajı geldi
+ls /ddtt > /dev/null ——>  hata olmayanları null’a gönderdi, hata mesajı ekrana geldi
+ls /ddtt 2> /dev/null ——> ekrana bir şey gelmesin
+ls /ddtt /root ——> ddtt bulamadı, mesaı geldi ama root’un altını gösterdi
+ls /ddtt /root 2> /dev/null ——> ddtt için hata mesajı göstermedi, root’un altını gösterdi
+ls /ddtt /root 2> /dev/null > /dev/null ——> hatayı da root’un altındakileri de gizledi
+ls /ddtt /root &> /dev/null ——> 1 ve 2 demek. hatayı da root’un altındakileri de gizledi
+
+0 — Giriş / stdin
+1 — Çıktı / stdout
+2 — Hata /stderr 
+
+Tuesday 9 August 2016
+Pathler
+ls /bin | wc -l
+echo $PATH, echo $SHELL
+$ ile başlayan komutlar
+echo $PATH ——> : ile ayrılmış full path’ler. sistemin baktığı yerler.
+whereis ls ——>  ls’i pathlerde arıyor, bulursa çalıştırıyor, bulamazsa diğer pathlere bakıyor, tekrar deniyor. 
+ls yazdığımda çalışmasın, listele yazdığımda çalışsın!!
+ls -lah /usr/bin/ls ——> diyince ls’i listeledik.
+gelen çıktı: yeşil renkli /usr/bin/ls çünkü çalışan bir program. eğer bu path’e gelip başka bir dosyaya ls adı verirsem, asıl ls çalışmaz.
+mv /usr/bin/ls usr/bin/listele yazdığımda artık ls yerine listele çalışacak. 
+path’te olan tüm programları saydırıp kaç program çalıştığını buluyoruz.
+
+ALIAS
+yerine kullanılacak.
+tanımlı tüm aliasları görmek için komutu (alias) yazmamız yeterli.
+alias hepsi=‘ls -la’
+ll komutu ls -l komutunu karşılıyor. bunun için alias önceden tanımlanmış.
+
+YETKİLER
+Her dosyanın bir sahibi bir dizini var.
+sahibi / grubu/ diğer
+r (read), w (write), x (execute)
+d (directory), - (regular file), p (fifo: first in first out), s (soket), l (link) ——> ls dediğimiz zaman en solda görme ihtimalimiz olan harfler
+su - ranger ——> ranger kullanıcısına git
+chmod 640 dosyaadı ——> 640’ı nasıl hesapladığımızı yazalım…
+usermod -g root ranger ——> kullanıcının grubunu root ile aynı yaptık
+tail -5 /etc/passwd ——> yeni kullanıcı sona eklendiği için bu şekilde bakabilirim
+who yazınca kim girmiş, whoami şu anda kim sistemde
+!!! Eğer dizine yazma yetkiniz varsa dosya silebilirsiniz.!!!!
+dosyaların isimleri, bulundukları dizinlerin içinde saklıdır.
+
+FILE SYSTEM - iNODE & BLOCK
+https://www.youtube.com/watch?v=oHrlU3b1ZAw bu linkten çalışılabilir. 
+SORU: Dizine yazma hakkım var, dizin içindeki dosyaya yazma hakkım yok. Bu durumda dosyanın adını değiştirmek istiyorum. Yapabilir miyim? Nasıl yaparım.
+Dizin ve içine dosya oluşturdum. Dosyanın chmod’unu 000 yaptım, ama dizininkini değiştirmedim. Bu yüzden dosyanın adını değiştirme yetkim değişmiyor.
+mkdir kevs2
+touch dosyakevs
+chmod 000 /kevs2/dosyakevs
+dosya/kev içindeyken ll ile görebiliyoruz yetkileri
+mv dosyakevs dosya100
+
+Yeni oluşturduğum dizinin izinleri neye göre oluşuyor?
+umask —> yeni bir dosya ya da dizin oluşturduğumuzda bunun izinleri olacak, otomatik olarak atanıyor ama ne olsun, kaç olsun? İzinleri bildirirken bu komut kullanılıyor.
+bir çok işletim sistemi yeni bir dosya oluşturunca çalıştırma yetkisi vermez
+man umask diyince bash’in manualini açıyoruz.
+dosya ve dizin için umask değerleri farklı hesaplanıyor.
+dosyalar için 666-002 = 644 bir dosyayı yeni oluşturuyorsam çalıştırılabilir olmasını hemen istemem. ( x vermekle alakalı)
+dizin için 777-022=755. dizinin çalıştırılabilmesi cd ile içine girebilmek demek.
+ls yapabilmek için okuma izni lazım. cd için çalıştırmak lazım.
+umask’ı ne yaparsak yapalım x’lere 1 vermeyecek. 
+666-666=0y
+usermod grubu değiştiriyoruz
+SUID ve GUID değiştirmeler
+-t var temp dosyasına özel. orada herkes dosya yaratıp silebilir ama ama kimse kimsenin dosyasına karışamaz.
+T  gördüğümüzde others kullanıcılarının executable yetkisi olmadığını anlıyoruz. (chmod 07444 yaptığımızda gördük) oluşturduğumuz dosyayı diğer kullanıcılar çalıştıramadı.
+user set ediyorsak 4, group set ediyorsak 2, others için 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wednesday 10 August 2016
+chmod İÇİN KISA YOLLAR
+chmod g + w dosyaadı ——> grub’a yazma yetkisi ver
+chmod g - w dosyaadı ——> grup’tan yazma yetkisini al
+chmod + w dosyaadı ——> hepsine yazma yetkisi ver
+chmod + a dosyaadı ——> hepsine yazma yetkisi ver
+chmod o=rwx ——> others’a tüm yetkileri ver
+
+İçinde komut olan dosyaları nasıl çalıştırırız?
+Eğer o dosyayı çalıştırma yetkimiz varsa;
+/home/kullanıcının_home’u/dosyaadı ——> içine bakmadan çalıştırmak için dosyanın path’ini verebiliriz.
+./ dosyadı ——> Eğer o dosyasının bulunduğu yerdeysek ve çalıştırma yetkimiz varsa 
+sh fullpath ya da sh dosya adı ——> bu komut çalıştırılabilir izni olmayan dosyaları da çalıştırabilir.
+Eğer bulunduğumuz yerdeysek (. dosyaadı)
+
+Bir dosya aynı anda iki yerde olabilir mi? EVET. 
+Link count: bir dosyanın aynı anda birden çok yerde olup olamayacağını belirler.
+örneğin masaüstünde short cut oluşturmak
+SOFT LINK: ln -s dosya_adı yeniyeri: gidip yeni yerine bakınca rengi değişik. Çalıştırabilmek için dosya_adı yerine dosyanın tam path’ini de verebiliriz.
+Link olup olmadığını “ll dosya_adı” diyince sol taraftaki izinlerin olduğu yerde görebiliyoruz.
+Yeni oluşturduğum yere gidip  “. dosya_adı” ile çalıştırılabilir.
+Dosyayı taşırsak link bozulur, sembolik linklerde isim değiştirirsek link bozulur.
+ln -s /tmp ./naber2 ——> ilk kısım hedef dosya, ikinci kısım kaynak
+Hard link yaptığımızda dosyayı değiştirsek de diğeri kırılmıyor çünkü aynı iNode’a bağlıyor, oradaki link count 0 olmazsa dosya silinmez. Silince link count sayısı azalıyor. Ayrıca bu linklemele ile harddiskte fazladan yer kaplamıyor.
+
+NETWORK AYARLARI
+cd /var/log/anaconda
+ifcfg.log ——> interface config yani network ayarları. ethernet, wi-fi
+cat ile ifcfg.log dosyasını açıyoruz
+oradaki etc/sysconfig/network-scripts/ifcfg-enp0s3 dosyasını nano ile açıyoruz ve ONBOOT=yes diyoruz.
+Sonra reboot yaptıktan sonra eğer kendi bilgisayarımız internete bağlı ise makinemiz de otomatik olarak internete bağlandı.
+ping 8.8.8.8 ile kontrol ettik.
+ 
+PAKETLER ve KURULUMU
+rpm: REDHAT PACKAGE MANAGER
+apk: Application Package. ape dosyalarının uzantıları .rpm
+Tüm paketlerin listesini almak, yeniden bir kurulum için önem taşır.
+rpm -q nano ——> q=query (sorgu)
+rpm -q gedit
+rpm -ql nano ——> nano kurulurken neler olduğunu, paket dosyalarının nereye gittiğini görmek için
+rpm -qa ——> bilgisayarımda kurulu tüm paketleri gösterir (rpm -qa | less) (all)
+rpm -i dosya ——> indirdiğim dosyayı kursun (install). program bilgisayarımda yüklü değilse hata verecek.
+rpm -i force dosya ——> hata vermez, yükler ama çalışması için gerekli şeyler sistemde yoktur. 
+rpm -e paket.rpm ——> paketi siliyor (erase).
+x programı için y programı da gerekliyse, hepsini kurmasını istiyoruz. 
+whatis yum? tüm bağımlılıkları bulup hepsini yüklüyor.
+yum’da depolarda düzgün çalıştığı bilinen dosyalar var, o an çalışan sürümü/stabil olanı seçip yüklüyor.
+yum install nano
+yum search apache ——> diyince hangisini kuracağımızı, adını yanlış da bilsek doğrusunu görebileceğimizi seçebiliriz (httpd)
+yum remove httpd
+rpm -qc httpd ——> ayar dosyaları etc’de ama tek tek bulmak ya da ql ile bulmak. bu komut ile config dosyalarını buluyoruz. QUERYY CONFIGIRATION
+Ne yüklersem nano komutuna sahip olurum? Hangi paketi bulursam?
+yum provides nano
+yum provides ls ——> coreutils paketinde. cat, ls gibi komutlar burada.
+Tarayıcıya gitmek (GOOGLE örneğin) için: yum provides lynx 
+yum install 
+lynx
+yum groupinstall “Desktop” “Desktop Platforms” ——> bana geliştirme araçları lazım: editörler, derleme programları, masaüstü ortamı
+startx ile başlatıyoruz masaüstünü!! 
+“trying other mirror” “fastest mirror” hatası alınca “yum clean all” diyip tüm cache’leri sildiyorum. sonra komutumu tekrar çalıştırıyorum.
+yum paket yönetim aracıdır. rpm yöneticidir.
+
+
+
+
+
+
+
+
+
+
+Friday 12 August 2016
+Paket Yönetimi ile İlgili Kısa Bilgiler
+rpm ve yum ilk kurulumda dosya dosya tutuyor ayarları. ilk dosyamın hash’ini tutuyor. sonra update edileceğinde faklılık mı var bunu “.rpmnew” uzantısı ile kaydediyor. rpmnew’i kendisi kullanmıyor, sadece değişen dosyaları söylüyor. isim vs. değişikliğini elle yapmamız gerekiyor.
+örneğin sayfalar.conf diye bir dosyam var, internetten bir şeyler indirdiğimde yeni ayarlarım silinir mi? farklı olduğunu nasıl anlarız?
+yeni dosyayı “sayfalar.conf.rpmnew” olarak kaydediyor. Git ilk dosyan ile kontrol et diyemiyoruz
+yum’un debian’da karşılığı “/apt”. debian için paket yönetim aracıdır. 
+/dpkg ——> debian package
+
+Programları nereden indiriyoruz? Yum’un depolarının listesi nerede? 
+cd /etc/
+ls yum* diyip gelenlere bakıyorum “yum.repos.d” 
+nano CentOS-Base.repo dosyasının içine bakalım.
+enable = 0 ya da 1 yaparak ayarları açıp kapatabiliriz.
+mirror, deponun bir kopyasını tutuyor.
+
+programı indirmek istiyorum ama yüklemek istemiyorum 
+yum install -downloadonly 
+Güncel paket var mı? “yum check-update”
+Hepsini update etmek için “yum update”. Hangi depoyu kullanacak, neler indirecek, total ne kadar indirecek?
+yum update -y ——> hepsine tek tek yes dememek için
+1 tane bilgisayara 1 GB dosya indirip, 100 bilgisayara onu aktarmak için 100 gb indirmeden ilk bilgisayarı mirror olarak kullanacağız. 
+deltarpm ——> kendi bilgisayarımda eski ile yeninin farkını birleştirip yenisini elde ediyor. (Delta kelimesinin anlamı gibi)
+rpm ile yum’u kaldırıp, kurabiliriz. yum da bir program.
+yum history ile listeyi görebiliriz. kim, hangi paketi ne zaman kurdu kaldırdı. ama hangi paketler olduğunu göremiyoruz
+yum history info ID 
+yum history undo ID
+yum history redo ID
+
+****** GNOME Desktop için yaptığım deneme****
+EPEL —— extra packages for enterprise linux (RHEL)
+EPEL 7 bir rpm dosyası indirip kurabiliriz
+-epel-release-latest-7.noarch.rpm dedikten sonar indirdiğim yeri beğenmezsem mv komutu ile root’a taşıdım.
+sonra rpm -i epel-release-latest-7.noarch.rpm dediğimde NO KEY hatası aldım.
+locate ile arama yapacağız. locate tüm dosya isimlerini kaydediyor updatedb ile. daha kolay bulması için. Veri tabanında arıyor. Find daha farklı, dosyaların içini de arıyor o.
+Periyodik İşleri Nasıl Hallederim? - Crontab
+Örneğin 5 saatte bir tmp’in içini boşaltsın ya da her saat başı bir şeyi değiştirsin.
+nano /etc/crontab ——> zamanlamış görevler, bilgi için içine baktık. 
+crontab dosyasında 5 tane yıldız var. ben bu yıldızları doldurmak, kullanıcı girmek zorundayım
+* her demek, eğer sayı yazmazsam
+PATH çalıştıracağımız şeyin yolu.
+* * * * * root echo merhaba >> / tmp/selamlama
+ÖRNEKLER
+Hergün saat 2’de çalışsın? (0 2 * * *)
+Hergün 2 kere sabah 5’te ve akşam 5’te? (0 5,17 * * *)
+Her pazar saat 5’te? (0 5 * * sun) root echo naber >> /tmp/sendennaber
+Her 10 dk’da bir? (*/10 * * * *)
+Ocak, şubat, kasım aylarında her dk? (* * * 1,2,11 *)
+Her 2 ayda bir ayın 15’inde saat 9’u 3 geçe? (3 9 15 */2 *)
+Pazar ve cuma günleri, akşam 5’te? (0 17 * * 4,7)
+Her 4 saatte bir çalışsın? (0 */4 * * *)
+Bilgisayar açıldığında? (@reboot)
+reboot root loadkeys trq ——> klavyeyi başlangıçta Türkçe yapsın
+tail -F /tmp/selamlama  ile sürekli gelenleri görebiliriz. her defasında cat çalıştırmaktan daha kolay.
+systemctl restart crond.service ——> baştan başlatıp kontrol ediyor
+Herhangi bir kullanıcı kendisi için cron kaydedebilir mi? EVET. Önceden kısıtlama yapılmamışsa cron kaydedebilir.
+etc altında, cron.allow yoksa cron.deny ile engelli listeyi görebiliyoruz.
+crontab -e diyince vi ile açılıyor. Biz nano ile açmak istiyoruz: 
+ env EDITOR=nano crontab -e
+bunu yaptıktan sonra açılan dosya adının sonunda başka şeyler yazıyor, bunu cran sonra kendi oluşturuyor. 
+crontab -r——> siliyor, crontab -l ——> listeliyor
+restart crond.service
+etc/cron.deny ‘ı nano ile açıp içine kullanıcı adı yazında daha cron yazamaz o kullanıcı 
+crontab -u bardak ——> bardak kullanıcısının cronlarını düzenlememe yardımcı oluyor.
+env EDITOR=nano crontab -e -u kupa
+AT ve BATCH KOMUTLARI
+at, tek seferlik iş
+bacth, tek seferlik iş ama “sistemin yükü 0.8’in altına düşünce yapsın” diyeceğimiz işi yapar. Süre vermemiz gerekmiyor bu komuta.
+kendi sistemimizin saatine göre bir iş atayalım ama önce servislerle ilgili bir not:
+service atd.start
+önce date diyip sistemin saatine bakalım, sonra at 09:20 komut diyelim
+atq yapılacak işin sırası (queue’den geliyor)
+Bir kullanıcının cron dosyası nerededir?
+var/spool/cron
+ls var/spool/cron
+Link: http://www.computerhope.com/unix/uat.htm
+Anacron, bilgisayarın kapalı olacağını da var sayıyor.
+Tar
+Sıkıştırmıyor, bir araya getiriyor, topluyor.
+İki tane dosya oluşturup içini doldurduk: cat > dosya6 << EOF
+cat dosya5 dosya6 ile yazılan sırada görürken, tac dosya5 dosya6 ile ters görürüz
+tac dosya5 dosya6 | cat -n
+tar cf ——>
+c —> create, f —> file (çıktı dosyasının adı) f en sonda olmak zorunda
+tar cf kamp.tar dosya5 dosya6 
+şimdi bunu sıkıştırabilmek için: gzip kamp.tar
+x ——> extract 
+gunzip kamp.tar.gz daha sonra tar xf kamp.tar
+tar czf bisey.tar.gz dosya5 dosya6  ——> create edip sonra zipliyor. uzatmıyoruz böylece.
+z —> gzip
+tar xzf kamp.tar.gz——> extract zip file
+Ayar dosyalarını bulunduğumuz yere yedekleyelim?
+tar czf yedek.tar.gz /etc
+sonra başka bi dizine kaydetmek için:  tar zxf yedek.tar.gz -C etcyedek
+tar czvf etcyedek2.tar.gz ——> burada v:verbose demek, ayrıntılı olarak neleri arşivlediğimizi gösteriyor.
+
+
+Sıkıştırma algoritmaları:
+Huffman Encoding: video codeclerinde sıkça kullanılıyor
+LZW
+Run length coding: jepg’te once bu sonra Huffman kullanılıyor
+JPEG ile PNG farkları: jpeg’i sıkıştırırsak kayıpsız bir algoritma değil. png kayıpsız. png daha kaliteli.
+
+Bzip2
+Gzip’ten daha iyi olan bir sıkıştırma algoritması. Gzip’ten daha düşük bir boyut elde ediyoruz.
+czf yerin cjf kullanmak yeterli
+tar cjf yudan.tar.bz2 /etc
+dizin5 yapıp içine 3 tane dosya oluşturduk. Bunun sıkışması için: gzip -r dizin5
+İki dosya birbirine aşırı benziyor olabilir. Tar ile birleştirip, Gzip daha iyi sıkıştırabilir. 
+Yalnız tek bir dosyayı sıkıştıracaksak Tar yapmaya gerek yok.
+zcat ——> arşivden çıkarmadan içini gösteriyor.
+tar -tf dosya ——> açmadan içini listeliyor
+Yeni bir dosya ekleyebilir miyiz içini açmadan?
+tar -rf yeni.tar dosya6 ——> r burada append 
+tar tf yeni.tar ——> içine baktık
+
+Dosyayı tar ile kopyalama?
+örnek olarak: cp -r  /etc ./etckopyasi — —> tarlamadan kopya oluşturmak
+(tar czf - /etc  | tar xzf  -) ——> standart output ile iletiyor
+tar cf - . | (cd /tmp/d ; tar xf - .) ——> standart output ile iletiyor
+
+Find
+find nerede aramak_istediğim_kriter
+Dosya isminde arıyoruz. Ayrıca inode’a da bakabiliyoruz çünkü son değiştirme tarihi, ismi, izni orada tutulabiliyor.
+-name, iname (case insensitive), -type (türüne bakıyor. f,d,b,c,l), cnewer 
+find / -type f -name passwd
+find / -type d -name *log*
+atime (accesstime)
+find / -atime +2 
+
+find /etc -type f -iname *.conf | xargs tar czf conflar.targz
+find /etc -type f -iname *.conf -exec cat ‘{}’\ ;
+bu dosyaların hepsinin birleşmiş hali
+	find /etc -type f -iname *.conf -exec cat ‘{}’\  >> /tmp/hepsi \;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Saturday 13 August 2016
+
+Find ile bulunduğumuz dizindeki tüm dosya ve alt dizinleri listeleyin
+Boyutu 2M’dan küçük olan conf uzantılı dosyaları büyük-küçük harf fark etmeden arayınız?
+find /etc -type f -iname *.conf -size -2M
+find /etc -type f -size -2M -iname ‘*.conf’ -o -name ‘a*, b*’
+-maxdepth: en alt kaç dizine gidip arayacak
+-not -iname *.conf ——> adında conf olmayanlar
+a ile başlamayacak ama conf ile bitecek
+find .-delete ——> bulunduğumuz dizindeki tüm dosyaları siliyor. geri dönüşü yok.
+gizli dosyalar ——> find ~-type f -iname ‘.’
+-perm (permission)
+izinlere göre arama ——>  find /etc -type f -perm 0644
+find /etc -type f -not -perm 0777 
+suid biti aktif olan dosyaları bulmak için 
+-perm /u=s
+find / -perm /u=s 2> /dev/null
+find /etc -perm /u-=r
+etc ve bin içerisinde adında a ve b harfi yanyana olacak
+find /etc/ /bin/  -iname ‘*ab*’
+echo $USER ——> kullanıcı adımı veriyor
+find -mtime 50 -type f ——> 50 gün içinde değiştirilen dosyalar
+find -mtime +50 -type f -mtime -100 2> /dev/null
+-cmin -60 ——> 60 dk önce değiştirdiğim
+find -amin -60 -type f
+boş olan dosyaları görmek için ——> -empty
+Grep
+cat /etc/passwd | grep “root”
+grep “root” /etc/passwd
+grep “root” /etc/passwd
+ls /etc/ | grep 
+grep -i ——> case insensitive
+‘^senle’ ——> satır başında geçsin demek için ^ şapka karakteri
+‘senle$’ ——> satır sonu
+. ——> Tek bir karakter ifade edeceksek
+‘se..e’ ——> başlasın…bitsin
+grep ‘^$’ /edebiyat | wc -l ————> boş satırlar
+grep -v “^$” ——> olmayanları al (inVerse)
+grep ‘i’ /edebiyat——> dosyanın içerisinde i harfi geçen satırlar
+-B 1 -A 1‘kok’ /edebiyat ——> bulduğu ve önceki 1 ve sonraki 1 satır (before, after)
+-C 2 ‘kok’ — —> önceki ve sonraki 2 satır
+-c “kok” ——> kok kelimesi kaç satırda geçiyor
+-n “i” ——> kaçıncı satırda geçtiklerini gösteriyor
+grep -l ——> isimleri
+-E özel karakterleri (), +,? grep içinde kullanmamızı sağlıyor. egrep de olur.
+zgrep ile dosyaları açmadan arıyoruz
+zgrep “model”  /proc/cpuinfo
+-w “kok” ——> sadece istediğim kelime
+“-\w” ——> sadece -w istiyorum
+- - “-w” ——> sadece -w istiyorum
+metin içinde root geçen dosya isimleri
+grep -r -l “root” /etc/
+
+
+etc’de adında conf geçen dosyaların içinde root varsa gzip yazıp
+find /etc -type f -name “*conf*” | xargs grep -l “root” | xargs tar czf super.tar.gz
+etc’de içinde adında conf geçen boyutu 10 KB’tan küçük dosyaları içinde a geçen tar.gz 
+find /etc -type f -name “*conf*”  -size 10k | xargs grep -l “a” | xargs tar czf super2.tar.gz
+- bin’de yer alan suid’i olanları
+find /bin -perm /u=s | xargs tar cf edebiyat.tar
+
+uniq ve sort
+“senden\|senle” ——> or işlemi
+grep -E -i “sen(i|in|le|den)” /edebiyat
+dmesg | grep -i “sda” ——> dmesg çekirdeklerin kayıtlarını gösterir.
+grep -E “ben.*kok” /edebiyat
+grep -E | “(s|h)d[a-z]” ——> regex örneği
+grep -i “ben” /edebiyat | grep -i “kok”
+grep -E “ben.*kok|kok.*ben” /edebiyat
+
+Network
+ip add ——> sunucumun ip adressini görebiliyorum
+yum install net-tools dedikten sonra ifconfig ile de görebiliriz
+ip, ping, traceroute, telnet, nmap, whois, netstat, dig
+tracepath www.ipecho.net
+GNS3 ——> bilgisayarları ağla bağlama programı (görsellerle birleştiriyoruz ve arka ksımını da yazıyoruz)
+
+
+
+
+
+
+
+Sunday 14 August 2016
+
+Eğitmen: Mustafa AKGÜL (Bilkent Üniversitesi)
+SED: Stream Editor
+wget -np -nH -m http://139.179.130.62/LYK/LYK2015/SED/ ——> SED dosyalar 
+wget http://139.179.130.62/LYK/LYK2015/Awk.zip ——> AWK dosyaları
+wget http://139.179.130.62/LYK/LYK2015/LabF.zip ——> Çeşitli Örnekler
+
+SED: Stream Editor. Komut satırında editörde değişiklik yapmaya yarıyor. SED input’u alıyor, gerekli değişiklikleri yapıyor, daha sonra modified text’i veriyor.
+Regex = matching bilmek önemli.
+echo -e “a\n\nb\n\n\nc” ——> boş satırlı
+echo -e “a\n\nb\n\n\nc” | grep “^$” | wc ——> 
+echo -e “a\n\nb\n\n\nc” | sed ‘/^$/d’ ——> boş satırları siliyor
+echo -e “a\n\nb\n\n\nc” | sed ‘/^$/s/^/ELIF” ——> boş satırların başına ELIF ekle
+echo -e “a\n\nb\n\n\nc” | sed ‘/^$/!s/$/ELIF” ——> boş olmayan satırların başına ELIF 
+echo “a b; c,,\t d” | sed -f SED.0 
+echo “abc\n xyz \n abx” | sed -f SED.la ——> abc satırının öncesinde XYZ görüyoruz
+echo -e “abc\n xyz \n abx” 
+echo -e “ basla\nx\nbitti\nbit”
+echo -e “ basla\nx\nbitti\nbit” | sed “$s%$% SON%”
+for i in *txt
+do
+new=$(echo $i | sed ’s/txt/TXT’)
+echo $i $new
+done
+cat -n BB.txt | sed -n ’70,90p’  ——> 70-90 satırları arasını göster
+awk ‘{sum$2+$3+$4; print $1, sum}’  note.txt ——> satırları topluyor
+tail -5 /etc/passwd | awk -f Awk.4
+sed -n ‘/Net/p’ A.txt 
+awk ‘/Net/’ A.txt | wc
+grep “^$” A.txt | wc
+sed -n ‘/^$/p’ A.txt | wc
+awk ‘/^$/‘ A.txt | wc
+grep -v “^$” A.txt |wc
+sed -n “/^$/!p” A.txt | wc
+awk -n “!/^$/” A.txt | wc
+sed-n “/^$/d” A.txt | wc ——> boş satırları sil
+Bash Script
+wget -np -m -nH http://139.179.130.62/LYK/LYK2015/Scripts
+wget ab.org.tr/scripts.zip
+wget ab.org.tr/Answers.zip
+
+
+
+
+
+
+
+
+
+
+
+
+
+Sunday 14 August 2016
+
+Eğitmen: Doruk Fişek
+TCP/IP ve Linkleme işledik
+
+Bash Script
+chmod -x 1.sh
+chmod u+x 1.sh
+#! — she bang
+#! /bin/bash ——> ilk satırda olmak durumunda
+ÖRNEKLER
+#! /bin/bash
+echo -n “İsim: “
+read ISIM
+echo “Merhaba $ISIM”
+
+Bir isim verdiğimde otomatik olarak o isme /home oluşturacak
+#! /bin/bash
+echo -n “Kullanici ad: “
+read KADI
+mkdir /home/$KADI
+ÖZEL DEĞİŞKENLER
+echo $LINENO
+echo $SECONDS
+echo $HOSTNAME
+echo $RANDOM
+- EXPORT: parent süreci, çocuk süreçlere aktarmak
+
+Tuesday 16 August 2016
+Linux Booting Process
+Youtube’a yazdığımızda bu başlık altında videolar görebiliriz.
+BIOS’tan sonra Bootloader geliyor, onu da MBR’den alıyor.
+Initrd, kernel’ın daha hızlı açılmasında yardımcı oluyor aynı zamanda bir sorun varsa çözmeye de yardımcı olabiliyor.
+Initramfs şimdi kullanılan
+Initrd’den sonra kernel’a gelmiş oluyoruz. Sistem açılırken kernel ram’e yükleniyor. Bir programın process olması için kernel’a olması gerekiyor.
+Kernel ram’e yüklendiği ilk anda, ilk işi INIT process’ini başlatmak.
+Önce BIOS, sonra hangi disk içinse MBR, sonra Bootloader, sonra GRUB, init kernel’ı çalıştırıyor.
+INIT’in adı değişti ama anlatılacaklar temel. Şu anda birçok sistemde INIT kullanılmıyor, başka sisteme geçildi. Eskiden sistemin açılış ayarlarıyla ilgili bu dosya çok işe yarıyordu.
+Available Run Levels
+0 - Halt
+Single User Mod (ikinci bir kullanıcı sistemde oturum açamaz. Tek terminalde işlem halletmek, sıkıntı varsa düzeltmek için kullanılır)
+Multiuser, without NFS (Network File System yoke, internet arayan programmer çalışmaz)
+Full multiuser mode (şu anda kullandığımız)
+Unused (Yeni özellikleri sistemde kullanmak istersek)
+X11 (Masaüstü ortamı. Elimizde olsa bile init 3.seviyede başlasın dersek açılmaz)
+Reboot (baştan başlat)
+
+
+SYSTEMD ve SERVICE’LER
+Systemd, Kernel’den sonra başlıyor. Kullanıcı alanını yüklüyor ve ard arda processesleri yönetiyor. ve Çok çekirdek ile işlemleri aynı anda yapabiliyor. En önemli özelliği paralelleştirme. Eskiden sıra sıra çalışıyordu, şimdi hepsinin birden çalıştığını düşünüyor. (Apache-Network örneği) Bu sistemin kullanılması için SSD (solid state disk) kullanılması öneriliyor. Systemctl ise servislerin kontrolünü sağlıyor. Genellikle bilgisayarın açılışı ve arka planda çalışan. Örneğin ssh (secure shell) bir servistir. “unit” dediğimiz şey ise systemctl’de bulunan her şey, birim.
+yum install httpd ile Apache web server yükledik
+Konumuz güvenlik olmadığı için güvenlikle alakalı şeylerden kaçınıyoruz şimdilik.
+setenforce 0 ——> SELinux (secure linux) kullanımını kapattık.
+Sanal makinada “Network Settings” ten “Bridge Adapter” seçiyoruz. Tekrar Reboot diyoruz.
+Eskiden service httpd start ——> dediğimizde systemctl çalışıyor. Kapalıysa başlar, açıksa bir şey olmaz. Bir service çalıştırma yolu. Kapatmak için service httpd stop
+Yeni sistemde systemctl stop httpd.service, systemctl start httpd.service
+ systemctl status httpd.service ——> durumunu kontrol etmek için
+systemctl status httpd.service -l  ——> Son logları satır sonunda kırpmadan gösteriyor
+(yum install bash-completion ile tab ile tamamlama paketi yükledik)
+systemctl enable httpd.service ——> sistem başlarken otomatik olarak httpd’yi aç, elle açmak durumunda kalma. elektrik kesilince, reboot atınca felan. Buna tıkladığımızda gelen çıktı önemli:
+Tekrar status ile kontrol edelim. Başlangıçta otomatik açılıyor mu diye? Eğer açılsın istemezsem “disable” diyebilirim.
+
+systemctl reload httpd.service ——> sunucu açık kalsın, ayar değişiklikleri yapılsın. servisi kesintiye minimum dereceye uğratarak config dosyalarını yeniliyoruz. Servisi baştan başlatmak yerine bu kullanılıyor. 
+systemctl stop sshd.service ——> uzaktan bağlantıyı kapattığım için güvenli 
+systemctl disable sshd.service ——> uzaktan bağlantıyı kapattığım için güvenli 
+
+
+Disable dedikten sonra gelen linkle ilgili: 
+Gelen sembolik link mesajı: (inode’u farklı olan bir dosya oluşuyor, o dosya diğerini gösteriyor. eğer orijinal dosyanın yeri değişirse link kırılıyor. soft linkin de bir dosya olduğunu ve yer tuttuğunu biliyoruz) mesajda “removed symlink” diyor yani linki kırmış
+Enable diyince de sembolik link oluşturuyor ve nerede olduğunu söylüyor.
+Bir servisi otomatik olarak başlaması için o servisin servis dosyasına /etc/systemd/system dizininde bir dosyası olması yeterli.
+Linkte “multi-user.target” var o da run level’ı gösteriyor.
+/etc/systemd/system ‘in altında ls -l yapıp default.target’a bakarım. hangi run level’a gideceğini söylüyor.
+multi-user.target.wants dizininde hangi servislerin çalışacağını söylüyor. hangi sembolik linkler varsa o servisler başlangıçta otomatik çalışır.
+orijinal servis dosyaların /usr/lib ve less httpd.service
+
+setenforece 0 ——> selinux kullanımını kapattık. ve iptables -F 
+cd /etc/systemd/system ——> servis dosyaları normalde burada bulunur. stop, start dediğimiz dosyalar. eskiden bashscriptti, şimdi kendi service yazım dili var. tüm ayarlarda kullanılan ortak dil.
+systemctl list-units ——> service socket her şeyi gösteriyor
+iptables-save ——> tüm network trafiğini düzenlediğimiz yer. 
+iptables -F içerisinde olan bağlantıları engelleyen tüm ayarları sildik.
+systemctl isolate runlevel5.target ya da systemctl graphical.target ——> kaçıncı seviyede çalıştırmasını istersek
+systemctl set-default graphical.target ——> bilgisayar açılırken direkt hangi run level’a gitmek istiyorsam
+list-units - -type service - - all ——> sadece sistemdeki servisler
+snapshot ——> sistemdeki ne başlıyor ne bitiyor gösteriyor, sorunları bulmaya yardımcı oluyor. sadece systemd ile ilgili snapshot almamızı sağlıyor.
+systemd-analyze ——> süreyi söylüyor, yavaşlığın nerede olduğunu
+systemd-analyze blame ——> servis servis ne kadar sürdüğünü söylüyor.
+systemd-analyze critical chain
+systemctl dependencies service
+
+LOG’lar
+Loglar artık Systemd’de tutuluyor.
+Systemd logları ikilik sistemde tutar, cat ile görülmez, anlamsız karakterler çıkar. 
+Journalctl ile görülür.
+ls /var ——> içerisinde /log’da kayıtlar. Buraya cat, head, tail ile bakabiliriz. Eski sistemle aynı durumla.
+tail -F dosya değiştikçe aşağı yazmaya yarıyor.
+tail -F httpd/access_log  ve error_log kontrol edilebilir.
+ping’in yanına site_adresi yazarsak ip adresini veriyor. geolocateip hangi ülkeden diye gösteriyor.
+last son giriş yapanlar, tail lastlog binary loglar.
+cat btmp 
+
+—————————————————————
+
+journalctl
+journalctl /sbin/crond veya journalctl ‘which crond’ daha mantıklı sonuçlar
+journalctl | grep -i cron
+journalctl - -unit=crond ——> crond’a ait loglar
+journalctl - -since=today ——> bugünün logları
+jourbalctl - -since “20 minutes ago”
+journalctl -f ——> logları akarken görmemizi sağlıyor
+journalctl - -disk-usage ——> ne kadar yer tuttuğunu
+journalctl -p err ——>
+journalctl -p debug——>
+Alert durumlarına göre 0 en kötü durum, sistemin açılması sıkıntılı. (wiki.archlinux.org)
+nano /etc/systemd/journald.conf ——> hepsi yorum satırı gibi görünüyor, istersek kendimiz ayarlayabiliriz oradan.
+daha sonra systemctl restart systemd-journald.service diyip değişikliği kontrol edip yapsın.
+systemd’nin service dosyaları ——> cd /etc/system diyip ls -l ile display manager.service
+
+localectl ——> tüm sistemin locale’ini değiştirmek için çeşitli parametrelerle (dil ve klavye ayarları)
+
+LINUX PROCESS MANAGEMENT
+Program vs. Süreç
+
+Süreç kimliği. Process ID. Bilgisayar açıldığı andan itibaren başlatılan ilk process’in id’si 1’dir.
+1 numaralı PID init’e aittir.
+Her process başka bir process’in çocuğu gibidir. Tüm process’lerin ebeveyni init’tir. (0 hayali biridir.)
+ps komutu tek başına yazdığımızda o an çalışan process’leri gösterir.
+ps aux ——> tüm kullanıcılar için sistemde çalışan her şeyi gösteriyor.
+ps aux | grep tty ——> tty process’in ID’sini görmek için
+Process ID’lere bazı mesajları “SİNYAL” olarak gönderebiliyoruz. Kapatmak gibi.
+Normal bir programdan çıkmak için CTRL + C (çalıştırmıyor, donduruyor)
+kill PID ——> process’i bitirmek için
+kill -l ——> tüm sinyalleri bulabiliriz. istersek isimleri, istersek yanındaki numaralar ile bulabiliriz. her bilgisayarda farklı olabilir.
+init’i kill edemeyiz.
+Programın içinde hangi sinyallerin geldiğini görüp, ona göre işlem yapabiliyoruz.
+kill -sinyalno PID ——> sinyal göndermek için
+cd /proc/PID_no ile bakıp içerisinde bilgi edinebiliyoruz. ls diyip bir sürü bilgi görebiliyoruz. örneğin cmdline, komut satırından programı çalışırken hangi komutu yazdığımızı söylüyor.
+yum install htop yükleyip, htop dedikten sonra açılan renkli ekran: cpu kullanımını vs gösteriyor. Sort diyebiliyoruz.
+fg (fontground)
+fg %1 ——> arka plana attığımız işleri nasıl öldürürüz
+jobs yazdığımızda gelen listeden öldürmek istediğimiz için PID numarasına gerek yok, onun yerine jobs yazınca gelen listedeki numarayı seçip “kill %3”. 
+Bir sürece öncelik verebiliriz: nice komutu [-20,19] aralığında. -20 en öncelikli
+Hali hazırda çalışan bir sürece öncelik vermek ya da düşürmek için renice komutu. Öncelikler aynı aralık. (kullanımı: renice -20 PID) Örneğin işlemci içerisinde daha öncelikli kullanım veriyor.
+komut & yazıp çalıştırdığımızda (enter) arkada çalışıyor.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Wednesday 17 August 2016
+
+timedatectl ——> tek başına yazarsak sistemin şimdiki durumunu gösteriyor.
+NTP’yi (network time protocol) açık tutmak bizim için iyi olabilir, sistemlerin zamanlarını ayarlamak için. Osilatörler sonsuz hassasiyette üretilemiyor ve saatlerin doğru çalışması için önemli. Sıcaklık dahi etkiler, osilatör kristalleri değiştiği için.
+timedatectl set-time “2015-04-15 09:57:13”
+timedatectl -help deyip listelere bakıp ona göre düzenleme yapacağız:
+timedatectl list-timezones
+timedatectl set-timezone Europe/Istanbul
+yum install ntp 
+systemctl status ntpd.service, sonra systemctl start ntpd.service
+nano /etc/ntp.conf ——> eğer istersek kendi zaman sunucumuzu ayarlayabiliriz.
+tzselect (timezone select)
+Bir image dosyasını disk muamelesi yapabiliriz. 
+Önce dizin oluştur, sonra bağla. (aslında başka uzantılı bir şeye de yapabiliriz ama genelde bu kullanılıyor, zaten uzantılar linux’ta önemli değil)
+ dd if=/dev/zero of=disk.img bs=1M count=100
+mkfs. ——> make file system
+mkfs ext4 sonra yes diyorum.
+
+
+
+
+
+Diskleri sunucuya nasıl bağlarız: mount komutu
+Sökülüp takılan cihazlar için mnt ve media dizinlerini kullanıyorduk.
+cd /mnt
+mkdir flashdisk
+mount /root/disk.img flashdisk/ ——> flashdisk dizinine bağla. flashdisk dizin gibi gözükse de bizim diskimiz şu anda. 
+cd flashdisk, ls diyince lost + found
+umount /root/disk.img ya da umount flashdisk/ ——> diski çıkarmak için
+
+Disk oluşturmaca: 
+fdisk /dev/sdb diyorum. Gelen ekranlardan uygun boyutlara, bölümleri ve dosya sistemlerini seçiyorum.
+Dosya sistemlerini seçiyorum ama henüz dosya oluşturmamış oluyorum.
+mkfs.ext4 /dev/sdb1
+ls /dev/sdb dersem işlem yapabilirim 
+cat /etc/fstab ——> 
+gparted uygulaması ile de yapılabilir.
+
+Bridge ve NAT - İnternet ağına bağlanmak için ne lazım?
+IP
+Broadcast Adresi
+Network Adresi
+Default Gateway
+Bir ağda tanımlamak için ilk 3 araç için IP ve bir de diğer bilgisayar için IP (min 4 IP). 
+Netmask parçalamak için kullanılıyor. Normalde 255^4 (255.255.255.255) tane IP. Netmask bu kadar IP kullanamazsın diyor. (0.0.0.255). 255.255.255.192’yi çıkarttığımızda 63 tane IP alabiliyoruz gibi.
+SSH: Secure Shell (Eğitmen: Barış Büyükakyol)
+(Asma kilit - Anahtar Örnekleri)
+https ve ssl ile sayfalara girmek
+Veri paketini şifrelemek istiyoruz (her şeyi).
+Public_key ve private_key’e ihtiyacımız var. (kilit ve anahtar)
+Public_key ortada bulunur ki insanlar public_key ile şifreler. Private_key ile şifrelerse başkası açamaz. Public_key ile şifrelediğimizde bize özel bir şifre ve anahtar oluyor.
+Passphrase (anahtarımızı kutudan alıp parolayı açıyoruz. EK güvenlik. Paralo düzeyi. Doğrulama soruları)
+Anahtar sunucuları: mevcut public_key’lerin bulunduğu yerler. Asma kilitlerin sergi alanı gibi. Sunucular için kullanılanlar burada bulunmaz. Herkes tarafından ulaşılabilir olmalı.
+SSH anahtarı oluşturmak için: ssh-keygen: Sistem bizim için 2048 bitlik anahtar çifti oluşturacak. Ama bu kırılmış şu anda. (Bu yüzden 4096’lık oluşturacağız.  )
+Entropi yüksekse güvenlik o kadar iyi. Randomlık önemli.
+id_ras.pub ve id_ras olan iki dosya olacak. Yol yazmazsak.
+Sonra phrase için parola yazıyoruz: cd .ssh/ girdim.
+ssh-keygen -b 4096
+ssh-keygen -P ——> eskisini yazmamıza gerek kalmayacak
+ssh-keygen -P 123 -N 456 ——> eski 123’ü yeni 456 yapacak
+ssh-anahtarımızın public key’i kaybolursa yeni bir kilit üretebilir miyiz? EVET. Private key’imizden üretebiliriz. ssh-keygen -y 
+ssh-keygen -y >> id_rsa.pub diye yeni dosyaya eski public_key’imizi yazabildik. 
+Anahtarları sadece bunlar için kullanmıyoruz. Örneğin paketler aynı mantıkla şifrelenip, imzalanıyor. Private_key’ler Paket Deposu tarafından imzalanır. Paket yöneticisi bu imzaları kontrol eder. Doğrulama için önemlidir. Başka başka paketler indirmemek, çalıştırmamak için.
+
+
+
+
+Thursday 18 August 2016
+
+
+setfacl, getfacl : kullanıcı yetkilerini dosya özelinde değiştirebiliriz
+setfacl -m “u:kevs:rwx” a.txt
+Kurduğumuz paketin içinden çıkan dosyaların ayar dosyalarının hangileri olduğunu nasıl bulursunuz?
+rpm -qc nano
+ls komutu hangi paketten çıkıyor?
+	yum provides ls ——> coreutils
+rpm -q /bin/ls
+Sistemde kurulu olan ve yum’un aktif olarak kullandığı (hangi depolarda arama yapıyor)
+yum repolist
+Sistemde kurulu olan paketlerin listesi
+rpm -qa
+Extras reposundan kurulan paketlerin istesi
+yum list installed | grep -i “@base” | more
+Bir uygulamanın, çalıştırılabilir binary bi programın, hangi kitaplıklara bağlı olduğunun listesini nasıl alırım? (ls komutu hangi kitaplıklara bağlı)
+ldd usr/bin/ls
+
+
+
+
+
+SSH: Secure Shell (devam - Güray Yıldırım)
+SSH’tan önce Telnet vardı, o kadar da güvenli değildi.
+systemctl enable sshd ve systemctl start sshd diyerek ssh ile güvenli bağlantı sağlamaya başlıyoruz.
+ssh kullanıcı_adı@karsı_tarafın_ip ——> Başka sunucuya bağlanmak için
+kntrl + D ile bağlantıyı koparabiliriz
+ssh-copy-id root@karsı_tarafın_ip ——> id’nin kopyasını karşı tarafa ekledik. Tekrar girmeye çalışırken karşı tarafın sunucusuna, dün ayarladığımız /root/.shh/id_rsa dosyası için ayarladığımız private_key oluştururken girdiğimiz parola. Artık karşı tarafın sunucunun parolasını bilmeden de girebilirim o sunucuya. Bilgisayarımızdaki anahtarı o bilgisayara kopyalamış oluyoruz ve bunu kendi makinemize bağlıyken yapmalıyız.
+Herkesin açık anahtarının sunucu tarafından kabul edilip edilmemesini sağlayabiliriz. Sunucu açık anahtarımı biliyor ama onun gizli anahtarının ürettiği verileriyle bağlıyorum.
+Karşı tarafa bağlandıktan sonra wall naber  dedikten sonra o sunucuya ekrana bir şeyler yazdırabiliriz.
+yum provides ssh, cd /etc/ssh dedikten sonra ls diyip gelen ayar dosyalarından:
+nano sshd_config dedik
+[0-65535] aralığında port var. Eğer hiçbir ayar yapmazsak port 22.
+sonra orada PasswordAuthentication No dedikten sonra kaydedip çık. Sonrasında karşı tarafın gelmesi engellendi. Ben hala girebiliyorum.
+ssh kullanıcı_adı@karsı_tarafın_ip -p 4444 diyerek porttan bağlanılabilir
+rsync ——> hızlı bir kopyalama, elektrik gitse bile yarım kalan seyleri devam ettirme
+Link: http://www.tecmint.com/rsync-local-remote-file-synchronization-commands/
+Güncellenen doysaların güncelleme tarihlerini kontrol edip atabiliriz. Aktarırken sıkıştırabildiği için daha hızlı.
+rsync -ravh kaynak/ /tmp/hedef root@kullanıcı_IP
+rsync -avzh -e “ssh -p 4444” root@kullanıcıIP:/tmp /tmp_kevs ——> karşı tarafta bulunan /tmp dosyasını /tmp_kevs dosyama kaydettim 
+rsync -avzh -e “ssh -p 4444”  /kaynak root@kullanıcıIP:/tmp ——> kaynak dosyamı karşı tarafın tmp’sine yolladım.
+ssh üzerinden scp (Secure Copy) komutu da kullanılabilir. Sıkıştırma olayı ve parametre olayı yok.
+
+
+
+Ekstra Notlar
+FINGER komutu: Kullanıcı bilgilerine bakmaya yarıyor.
+finger test_user
+finger -s root ——> user’ın loginname ve login time gösteriyor
+finger -l root ——> multiline bilgi veriyor
+
+CHFN komutu: Kullanıcı bilgilerini değiştirmeye yarıyor (change finger)
+chfn test_user
+chfn -f “hazel kavılı”
+f full name, p phone number, u usage message
+
+dmesg ——> kernel kayıtlarını tutuyor.
+dmesg | tail ——> sdb1’leri görebiliriz.
+diskin içindeyken umount edemiyoruz, çıkıp tekrar umount diyebiliriz.
+fdisk /dev/sdb ——> interaktif bir ekran geliyor. sdb diskin adı
+
+
+
+
+
+
+
+FTP: File Transfer Protocol
+yum install vsftpd
+chroot _ localuser = YES (ftp sunucusu için şifreyi karmaşık yap)
+setenforce 0
+iptable -F
+systemctl restart vsftp.service 
+(ip adresini al)
+Sonra bilgisayara indirdiğimiz File Zilla programını açıp gerekli alanları dolduruyoruz.
+
+NOT: ssh üzerinden s-ftp kurabiliriz. public-key kullanabiliriz.
+
+
+
+
+
+
+
+
+
