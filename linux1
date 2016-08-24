@@ -70,8 +70,8 @@ ROOT’tayken
 du -sh /boot: bilgisayarımın çekirdeği boot’taydı. Gelen sayı kullanılan “disk usage”. Megabyte
 du -s /boot: h’yi çıkarınca sayı büyüyor ama h yazmak önemli “human readable” Byte
 cat dosya1 ——>  dosyanın içinde ne var ona bakıyor. (dizine değil)
-whoami ——> neredeyim, hangi kullanıcıyım onu söylüyor.
-whatis ls —> komutun sadece adını veriyor.
+whoami ——> hangi kullanıcıyım onu söylüyor.
+whatis ls —> komutun adını, açılmını veriyor.
 
 
 
